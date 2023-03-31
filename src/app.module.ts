@@ -7,6 +7,7 @@ import User from './user/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './core/auth/auth.module';
+import { MembershipModule } from './membership/membership.module';
 
 @Module({
   imports: [
@@ -30,7 +31,8 @@ import { AuthModule } from './core/auth/auth.module';
       isGlobal: true,
     }),
     UserModule,
-    AuthModule
+    AuthModule,
+    MembershipModule
   ],
   controllers: [AppController],
   providers: [AppService],
