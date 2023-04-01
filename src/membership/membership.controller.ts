@@ -6,7 +6,8 @@ import {
   Patch, 
   Param, 
   Delete, 
-  NotFoundException, 
+  NotFoundException,
+  BadRequestException, 
 } from '@nestjs/common';
 import { MembershipService } from './membership.service';
 import { CreateMembershipDto } from './dto/create-membership.dto';
@@ -21,6 +22,9 @@ export class MembershipController {
 
   @Post()
   async create(@Body() createMembershipDto: CreateMembershipDto): Promise<Membership> {
+    const membershipExist: Membership | null = await this.membershipService.findOneByDuration(createMembershipDto.duration);
+    if(membershipExist)
+      throw new BadRequestException('There is already a membership with that duration');
     return await this.membershipService.create(createMembershipDto);
   }
 
@@ -33,23 +37,23 @@ export class MembershipController {
   async findOne(@Param('id') id: string): Promise<Membership> {
     const membership: Membership | null = await this.membershipService.findOne(+id);
     if(!membership)
-      throw new NotFoundException('Membership not found')
-    return membership
+      throw new NotFoundException('Membership not found');
+    return membership;
   }
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateMembershipDto: UpdateMembershipDto): Promise<string> {
-    const membershipUpdated = await this.membershipService.update(+id, updateMembershipDto);
+    const membershipUpdated =  await this.membershipService.update(+id, updateMembershipDto);
     if(membershipUpdated.affected === 0)
-      throw new NotFoundException('Membership not found')
-    return 'Membership successfully updated' 
+      throw new NotFoundException('Membership not found');
+    return 'Membership successfully updated';
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<string> {
     const membershipDeleted = await this.membershipService.remove(+id);
     if(membershipDeleted.affected === 0)
-      throw new NotFoundException('Membership not found')
-    return 'Membership successfully deleted'
+      throw new NotFoundException('Membership not found');
+    return 'Membership successfully deleted';
   }
 }

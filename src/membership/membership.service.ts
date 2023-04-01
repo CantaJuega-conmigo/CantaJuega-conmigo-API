@@ -16,14 +16,14 @@ export class MembershipService {
 
   async create(createMembershipDto: CreateMembershipDto): Promise<Membership | null> {    
     const membership = this.membershipRepo.create(createMembershipDto);
-    return await this.membershipRepo.save(membership);
+    return this.membershipRepo.save(membership);
   }
 
   async findAll(): Promise< Membership[] | [] > {
-   return await this.membershipRepo.find();
+   return this.membershipRepo.find();
   }
 
-  private async findOneByDuration(duration: number): Promise<Membership | null>{
+  async findOneByDuration(duration: number): Promise<Membership | null>{
     return this.membershipRepo.findOneBy({duration});
   }
 
@@ -32,16 +32,11 @@ export class MembershipService {
   }
 
   async update(id: number, updateMembershipDto: UpdateMembershipDto):Promise<UpdateResult> {
-   return await this.membershipRepo
-    .createQueryBuilder()
-    .update(Membership)
-    .set(updateMembershipDto)
-    .where("id = :id", { id: id })
-    .execute();
+    return this.membershipRepo.update(id,updateMembershipDto);
   }
 
   async remove(id: number): Promise<DeleteResult> {
-    return await this.membershipRepo 
+    return this.membershipRepo 
       .createQueryBuilder('membership')
       .delete()
       .from(Membership)
