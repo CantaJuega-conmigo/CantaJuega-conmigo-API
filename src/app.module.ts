@@ -7,6 +7,8 @@ import User from './user/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './core/auth/auth.module';
+import { MembershipModule } from './membership/membership.module';
+import { Membership } from './membership/entities/membership.entity';
 
 @Module({
   imports: [
@@ -19,18 +21,19 @@ import { AuthModule } from './core/auth/auth.module';
         username: configService.get<string>('PGUSERNAME'),
         password: configService.get<string>('PGPASSWORD'),
         database: configService.get<string>('PGDATABASE'),
-        entities:[User],
+        entities:[User, Membership],
         synchronize:true,
       }),
       inject: [ConfigService],
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Membership]),
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
     }),
     UserModule,
-    AuthModule
+    AuthModule,
+    MembershipModule
   ],
   controllers: [AppController],
   providers: [AppService],
