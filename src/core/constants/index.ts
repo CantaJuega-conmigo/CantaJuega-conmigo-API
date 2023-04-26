@@ -1,2 +1,2 @@
 export { CORS } from './Cors';
-export { SALT, EXPIRED_TOKEN } from './constants';
+export { SALT, EXPIRED_TOKEN, swaggerConfig } from './constants';

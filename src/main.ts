@@ -8,14 +8,18 @@ import { ValidationPipe, ClassSerializerInterceptor } from '@nestjs/common';
 import { useContainer } from 'class-validator';
 import { CustomExceptionFilter } from './custum-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { CORS } from './core/constants';
+import { CORS, swaggerConfig } from './core/constants';
+// import { v2 as cloudinary } from 'cloudinary';
 
 async function bootstrap() {
   const server = express();
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
+  app.get(ConfigService);
   app.use(morgan('dev'));
   app.get(ConfigService);
   app.setGlobalPrefix('api');
+  app.useGlobalFilters(new CustomExceptionFilter());
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.enableCors(CORS);
   app.useGlobalPipes(
     new ValidationPipe({
@@ -25,17 +29,11 @@ async function bootstrap() {
     }),
   );
 
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-  const config = new DocumentBuilder()
-  .setTitle('Mi API')
-  .setDescription('Descripción de mi API')
-  .setVersion('1.0')
-  .build();
-const document = SwaggerModule.createDocument(app, config);
-SwaggerModule.setup('documentation', app, document);
-  app.useGlobalFilters(new CustomExceptionFilter());
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('documentation', app, document);
+  // cloudinary.config(cloudinaryConfig);
+
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   await app.listen(process.env.PORT || 4000);
-  
 }
 bootstrap();
