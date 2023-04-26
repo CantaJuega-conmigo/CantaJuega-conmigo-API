@@ -35,10 +35,7 @@ export class MembershipController {
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Membership> {
-    const membership: Membership | null = await this.membershipService.findOne(+id);
-    if(!membership)
-      throw new NotFoundException('Membership not found');
-    return membership;
+   return await this.membershipService.findOne(id);
   }
 
   @Patch(':id')

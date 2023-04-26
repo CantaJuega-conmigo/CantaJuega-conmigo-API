@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './core/auth/auth.module';
 import { MembershipModule } from './membership/membership.module';
 import { Membership } from './membership/entities/membership.entity';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { Membership } from './membership/entities/membership.entity';
         database: configService.get<string>('PGDATABASE'),
         entities:[User, Membership],
         synchronize:true,
+        // dropSchema: true,
       }),
       inject: [ConfigService],
     }),
@@ -33,7 +35,8 @@ import { Membership } from './membership/entities/membership.entity';
     }),
     UserModule,
     AuthModule,
-    MembershipModule
+    MembershipModule,
+    SeedModule
   ],
   controllers: [AppController],
   providers: [AppService],

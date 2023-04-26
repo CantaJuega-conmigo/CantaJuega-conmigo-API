@@ -6,14 +6,14 @@ import {
 
 @Entity({ name: 'user' })
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
-  firstname: string;
+  firstName: string;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
-  lastname: string;
+  lastName: string;
 
   @Column({ type: 'varchar', length: 60, unique: true, nullable: true })
   email: string;

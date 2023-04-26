@@ -1,30 +1,35 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Redirect, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Request } from 'express';
-import { GoogleAuthGuard } from './utils/Guards';
+import { ApiTags } from '@nestjs/swagger';
+import { Request, Response } from 'express';
+import httpStatus from 'http-status';
+import { UserService } from 'src/user/user.service';
+import { GetUser } from './decorators';
+import { AuthUserDTO } from './dto/auth-user.dto';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  @Get('google')
-  @UseGuards(GoogleAuthGuard)
-  handleLogin() {
-    return { msg: 'Google Authentication' };
-  }
+   constructor(
+      private readonly userService: UserService,
+   ){}
 
-  // api/auth/google/redirect
-  @Get('google/callback')
-  @UseGuards(AuthGuard('google'))
-  handleRedirect() {
-    return { msg: 'OK' };
-  }
 
-  @Get('status')
-  user(@Req() request: Request) {
-    console.log(request.user);
-    if (request.user) {
-      return { msg: 'Authenticated' };
-    } else {
-      return { msg: 'Not Authenticated' };
-    }
-  }
+ @Get('google')
+ @UseGuards(AuthGuard('google'))
+ async googleLogin():Promise<any>{
+    return httpStatus.OK;
+ }
+ @Get('google/callback')
+ @UseGuards(AuthGuard('google'))
+ async googleLoginRedirect(@Req() req:Request & { user?: any },@Res() res:Response):Promise<any>{
+   const {user, token} = await this.userService.findOrCreate(req.user);
+   return res.redirect(`${process.env.URL_FRONT}/login?token=${token}`)
+ }
+
+ @Get('refresh')
+ async refresh(@GetUser() user: AuthUserDTO) {
+   const userDB = await this.userService.findOne(user.id);
+   return await this.userService.generateToken(userDB);
+ }
 }

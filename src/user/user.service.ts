@@ -19,13 +19,13 @@ import { LoginUserDto } from './dto/login-user.dto';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private usersRepo: Repository<User>,
+    @InjectRepository(User) private userRepository: Repository<User>,
     private readonly configService: ConfigService,
   ) {}
 
   async create(
     createUserDto: CreateUserDto,
-  ): Promise<{ user: User; token: any }> {
+  ): Promise<{ user: User; token: string }> {
     const existingUser = await this.findByEmail(createUserDto.email);
 
     if (existingUser) {
@@ -33,11 +33,11 @@ export class UserService {
     }
 
     const hashedPassword = await bcrypt.hashSync(createUserDto.password, SALT);
-    const createdUser = this.usersRepo.create({
+    const createdUser = this.userRepository.create({
       ...createUserDto,
       password: hashedPassword,
     });
-    const user = await this.usersRepo.save(createdUser);
+    const user = await this.userRepository.save(createdUser);
     const token = await this.generateToken(user);
 
     return {
@@ -62,8 +62,8 @@ export class UserService {
   ): Promise<{ user: User; token: string }> {
     let user = await this.findByEmail(body.email);
     if (!user) {
-      user = await this.usersRepo.create(body);
-      await this.usersRepo.save(user);
+      user = await this.userRepository.create(body);
+      await this.userRepository.save(user);
     }
     const token = await this.generateToken(user);
     return {
@@ -73,15 +73,15 @@ export class UserService {
   }
 
   async findAll(): Promise<User[]> {
-    return await this.usersRepo.createQueryBuilder('user').getMany();
+    return await this.userRepository.createQueryBuilder('user').getMany();
   }
 
   async findByEmail(email: string): Promise<User | undefined> {
-    return this.usersRepo.findOne({ where: { email } });
+    return this.userRepository.findOne({ where: { email } });
   }
 
-  async findOne(id: number) {
-    const user = await this.usersRepo
+  async findOne(id: string) {
+    const user = await this.userRepository
       .createQueryBuilder('user')
       .where('user.id = :id', { id })
       .getOne();
@@ -90,29 +90,26 @@ export class UserService {
     return user;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.findOne(id);
     if (!user) throw new NotFoundException(`User with ID ${id} not found`);
 
     Object.assign(user, updateUserDto);
-    const updatedUser = await this.usersRepo.save(user);
+    const updatedUser = await this.userRepository.save(user);
     return plainToClass(User, updatedUser);
   }
 
-  async remove(id: number) {
-    const user = await this.findOne(+id);
+  async remove(id: string) {
+    const user = await this.findOne(id);
     if (!user) {
       throw new NotFoundException('Usuario no encontrado');
     }
-    return this.usersRepo.delete(id);
+    return this.userRepository.delete(id);
   }
 
-  private async generateToken(user: User) {
+   async generateToken(user: User) {
     const token = jwt.sign(
-      {
-        id: user.id,
-        email: user.email,
-      },
+      user,
       this.configService.get<string>('JWT_SECRET'),
       { expiresIn: EXPIRED_TOKEN },
     );

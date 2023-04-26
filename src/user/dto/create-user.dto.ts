@@ -11,11 +11,11 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @Length(3, 40)
-  firstname: string;
+  firstName: string;
 
   @IsNotEmpty()
   @Length(3, 40)
-  lastname: string;
+  lastName: string;
 }
 
 

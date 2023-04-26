@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateMembershipDto } from './dto/create-membership.dto';
 import { UpdateMembershipDto } from './dto/update-membership.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,33 +10,36 @@ import { ConfigService } from '@nestjs/config';
 export class MembershipService {
   constructor(
     @InjectRepository(Membership) 
-    private membershipRepo: Repository<Membership>, 
+    private membershipRepository: Repository<Membership>, 
     private readonly configService: ConfigService,
   ){}
 
   async create(createMembershipDto: CreateMembershipDto): Promise<Membership | null> {    
-    const membership = this.membershipRepo.create(createMembershipDto);
-    return this.membershipRepo.save(membership);
+    const membership = this.membershipRepository.create(createMembershipDto);
+    return this.membershipRepository.save(membership);
   }
 
   async findAll(): Promise< Membership[] | [] > {
-   return this.membershipRepo.find();
+   return this.membershipRepository.find();
   }
 
   async findOneByDuration(duration: number): Promise<Membership | null>{
-    return this.membershipRepo.findOneBy({duration});
+    return this.membershipRepository.findOneBy({duration});
   }
 
-  async findOne(id: number): Promise<Membership | null> {
-    return this.membershipRepo.findOneBy({id});
+  async findOne(id: string): Promise<Membership | null> {
+    const membership = await this.membershipRepository.findOne({where: {id}});
+    if(!membership)
+      throw new NotFoundException('Membership not found');
+    return membership;
   }
 
   async update(id: number, updateMembershipDto: UpdateMembershipDto):Promise<UpdateResult> {
-    return this.membershipRepo.update(id,updateMembershipDto);
+    return this.membershipRepository.update(id,updateMembershipDto);
   }
 
   async remove(id: number): Promise<DeleteResult> {
-    return this.membershipRepo 
+    return this.membershipRepository 
       .createQueryBuilder('membership')
       .delete()
       .from(Membership)

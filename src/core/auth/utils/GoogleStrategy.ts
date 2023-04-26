@@ -27,12 +27,12 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     const { name, emails,  phoneNumbers } = profile;
     const user = {
       email: emails[0].value,
-      name: `${name.givenName} ${name.familyName}`,
+      firstName: name.givenName,
+      lastName: name.familyName,
       phone: phoneNumbers ? phoneNumbers[0].value : null,
       accessToken,
     };
 
-    const payload = await this.authService.validateUser(user);
-    done(null, payload);
+    done(null, user);
   }
 }
