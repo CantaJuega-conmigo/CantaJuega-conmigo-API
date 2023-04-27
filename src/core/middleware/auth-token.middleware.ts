@@ -17,6 +17,7 @@ export class AuthMiddleware implements NestMiddleware {
         token,
         this.configService.get<string>('JWT_SECRET'),
       );
+      
       req.user = decoded;
       next();
     } catch (error) {

@@ -10,6 +10,7 @@ import { AuthModule } from './core/auth/auth.module';
 import { MembershipModule } from './membership/membership.module';
 import { Membership } from './membership/entities/membership.entity';
 import { SeedModule } from './seed/seed.module';
+import { EmailModule } from './utils/email/email.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { SeedModule } from './seed/seed.module';
     UserModule,
     AuthModule,
     MembershipModule,
+    EmailModule,
     SeedModule
   ],
   controllers: [AppController],
