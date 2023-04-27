@@ -31,6 +31,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       lastName: name.familyName,
       phone: phoneNumbers ? phoneNumbers[0].value : null,
       accessToken,
+      emailVerified: true,
     };
 
     done(null, user);

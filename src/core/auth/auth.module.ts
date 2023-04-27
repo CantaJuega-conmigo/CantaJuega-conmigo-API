@@ -7,6 +7,7 @@ import User from 'src/user/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GoogleStrategy } from './utils/GoogleStrategy';
+import { EmailService } from 'src/utils/email/email.service';
 
 
 @Module({
@@ -15,6 +16,7 @@ import { GoogleStrategy } from './utils/GoogleStrategy';
     AuthService,
     GoogleStrategy,
     UserService,
+    EmailService,
     ConfigService,
   ],
   controllers: [AuthController],
