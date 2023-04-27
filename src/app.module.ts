@@ -25,7 +25,7 @@ import { EmailModule } from './utils/email/email.module';
         database: configService.get<string>('PGDATABASE'),
         entities:[User, Membership],
         synchronize:true,
-        // dropSchema: true,
+        dropSchema: true,
       }),
       inject: [ConfigService],
     }),
