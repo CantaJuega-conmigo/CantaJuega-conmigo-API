@@ -4,8 +4,7 @@ export interface Membership {
     description: string;
     price: number;
     duration: number;
-    // therapeuticTools: boolean;
-    // music: boolean;
-    // videos: boolean;
-    
+    therapeuticTools: boolean;
+    music: boolean;
+    videos: boolean;
 }
