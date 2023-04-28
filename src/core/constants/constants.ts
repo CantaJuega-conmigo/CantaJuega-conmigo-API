@@ -29,3 +29,10 @@ export enum TOKEN_KEY {
   reset="JWT_SECRET_RESET_PASSWORD"
   // refresh = 'refresh',
 }
+
+export enum Gender {
+  male,
+  female,
+  NonBinary,
+  other,
+}

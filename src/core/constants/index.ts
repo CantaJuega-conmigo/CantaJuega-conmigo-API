@@ -6,4 +6,5 @@ export {
   Status,
   TOKEN_KEY,
   swaggerConfig,
+  Gender
 } from './constants';

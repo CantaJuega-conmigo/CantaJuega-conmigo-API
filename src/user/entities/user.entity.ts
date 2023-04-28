@@ -1,7 +1,9 @@
+import { Child } from 'src/child/entities/child.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
+  OneToOne,
 } from 'typeorm';
 
 @Entity({ name: 'user' })
@@ -27,6 +29,10 @@ export class User {
   @Column({ type: 'varchar', nullable: true })
   password: string;
  
+
+  @OneToOne(()=> Child , child => child.user)
+  child: Child;
+  
 }
 
 export default User;
