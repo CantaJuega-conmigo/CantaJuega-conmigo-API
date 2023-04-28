@@ -15,12 +15,11 @@ export class ChildService {
     private readonly userRepository: Repository<User>,
   ) {}
   async create(createChildDto: CreateChildDto) {
-    
     const user = await this.userRepository.findOne({
       where: { id: createChildDto.user.id },
       relations: ['child'],
     });
-  
+
     if (user.child) throw new BadRequestException('User already has a child');
 
     const child = await this.childRepository.create(createChildDto);
@@ -29,8 +28,10 @@ export class ChildService {
     return this.childRepository.save(child);
   }
 
-  findAll() {
-    return `This action returns all child`;
+  async findAll() {
+    return this.childRepository.find({
+      relations: ['user'],
+    });
   }
 
   findOne(id: number) {

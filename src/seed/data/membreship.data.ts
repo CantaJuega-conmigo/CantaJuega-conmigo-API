@@ -1,11 +1,16 @@
 import { Membership } from "./types";
-import * as bcrypt from 'bcrypt';
-import { SALT } from 'src/Core/Constants';
 import { v4 as uuidv4 } from 'uuid';
+
+const membreshipId : string[] = [
+    uuidv4(),
+    uuidv4(),
+    uuidv4(),
+    uuidv4(),
+]
 
 const membershipSeed : Membership[] = [
     {
-        id: uuidv4(),
+        id: membreshipId[0],
         name: 'Mensual',
         description: '⦁	Todas las herramientas terapéuticas para niñas y niños de 0 a 6 años',
         price: 49.99,
@@ -15,7 +20,7 @@ const membershipSeed : Membership[] = [
         therapeuticTools: true,
     },
     {
-        id: uuidv4(),
+        id: membreshipId[1],
         name: 'Semestral',
         description: '⦁	Todas las herramientas terapéuticas para niñas y niños de 0 a 6 años',
         price: 199.99,
@@ -25,7 +30,7 @@ const membershipSeed : Membership[] = [
         therapeuticTools: true,
     },
     {
-        id: uuidv4(),
+        id: membreshipId[2],
         name: 'anual',
         description: '⦁	Todas las herramientas terapéuticas para niñas y niños de 0 a 6 años',
         price: 299.99,
@@ -35,7 +40,7 @@ const membershipSeed : Membership[] = [
         therapeuticTools: true,
     },
     {
-        id: uuidv4(),
+        id: membreshipId[3],
         name: 'Canta conmigo',
         description: '⦁	Todas las herramientas terapéuticas para niñas y niños de 0 a 6 años',
         price: 99.99,
@@ -49,5 +54,6 @@ const membershipSeed : Membership[] = [
 
 
 export {
-    membershipSeed
+    membershipSeed,
+    membreshipId
 };
