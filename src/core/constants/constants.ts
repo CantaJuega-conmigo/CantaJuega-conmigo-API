@@ -31,8 +31,8 @@ export enum TOKEN_KEY {
 }
 
 export enum Gender {
-  male,
-  female,
-  NonBinary,
-  other,
+  male= 'Male',
+  female = 'female',
+  NonBinary = 'NonBinary',
+  other = 'other',
 }

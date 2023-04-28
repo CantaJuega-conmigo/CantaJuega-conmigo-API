@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateChildDto } from './dto/create-child.dto';
 import { UpdateChildDto } from './dto/update-child.dto';
 import { Child } from './entities/child.entity';
@@ -15,9 +15,15 @@ export class ChildService {
     private readonly userRepository: Repository<User>,
   ) {}
   async create(createChildDto: CreateChildDto) {
+    
+    const user = await this.userRepository.findOne({
+      where: { id: createChildDto.user.id },
+      relations: ['child'],
+    });
+  
+    if (user.child) throw new BadRequestException('User already has a child');
 
     const child = await this.childRepository.create(createChildDto);
-    const user = await this.userRepository.findOne({where: {id: createChildDto.user.id}});
     child.user = user;
 
     return this.childRepository.save(child);

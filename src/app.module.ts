@@ -28,7 +28,7 @@ import { StageModule } from './stage/stage.module';
         database: configService.get<string>('PGDATABASE'),
         entities:[User, Membership, Child],
         synchronize:true,
-        dropSchema: true,
+        // dropSchema: true,
       }),
       inject: [ConfigService],
     }),

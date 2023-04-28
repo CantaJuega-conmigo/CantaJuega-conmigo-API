@@ -44,7 +44,7 @@ export class UserService {
     const token = await this.generateToken(user);
     const confirmEmailToken = await this.generateConfirmEmailToken(user);
 
-    await this.emailService.sendEmail(
+    this.emailService.sendEmail(
       {
         to: user.email,
         subject: 'Bienvenido a Canta Juega Conmigo',

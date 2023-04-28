@@ -4,6 +4,7 @@ import {
   Column,
   PrimaryGeneratedColumn,
   OneToOne,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity({ name: 'user' })
@@ -30,7 +31,8 @@ export class User {
   password: string;
  
 
-  @OneToOne(()=> Child , child => child.user)
+  @OneToOne(()=> Child , child => child.user, {cascade: true})
+  @JoinColumn()
   child: Child;
   
 }
