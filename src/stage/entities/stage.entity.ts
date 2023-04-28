@@ -17,6 +17,12 @@ export class Stage {
   @Column()
   description: string;
 
+  @Column({ nullable: true})
+  minAge: number;
+
+  @Column({ nullable: true})
+  maxAge: number;
+
   @OneToMany(() => Child, (child) => child.stage)
   child: Child[];
 }
