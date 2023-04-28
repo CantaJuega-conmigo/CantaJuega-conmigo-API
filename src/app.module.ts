@@ -11,6 +11,9 @@ import { MembershipModule } from './membership/membership.module';
 import { Membership } from './membership/entities/membership.entity';
 import { SeedModule } from './seed/seed.module';
 import { EmailModule } from './utils/email/email.module';
+import { ChildModule } from './child/child.module';
+import { Child } from './child/entities/child.entity';
+import { StageModule } from './stage/stage.module';
 
 @Module({
   imports: [
@@ -23,13 +26,13 @@ import { EmailModule } from './utils/email/email.module';
         username: configService.get<string>('PGUSERNAME'),
         password: configService.get<string>('PGPASSWORD'),
         database: configService.get<string>('PGDATABASE'),
-        entities:[User, Membership],
+        entities:[User, Membership, Child],
         synchronize:true,
-        dropSchema: true,
+        // dropSchema: true,
       }),
       inject: [ConfigService],
     }),
-    TypeOrmModule.forFeature([User, Membership]),
+    TypeOrmModule.forFeature([User, Membership, Child]),
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -38,7 +41,9 @@ import { EmailModule } from './utils/email/email.module';
     AuthModule,
     MembershipModule,
     EmailModule,
-    SeedModule
+    SeedModule,
+    ChildModule,
+    StageModule
   ],
   controllers: [AppController],
   providers: [AppService],
