@@ -11,11 +11,9 @@ export interface Membership {
     videos: boolean;
 }
 
-interface Child extends CreateChildDto {
+export interface Child extends CreateChildDto {
     id: string;
 }
-
-
 
 export interface User {
     id: string;
@@ -26,4 +24,12 @@ export interface User {
     emailVerified: boolean;
     password: string;
     child?: Child;
+}
+
+export interface Stage {
+    id: string;
+    name: string;
+    description: string;
+    minAge: number;
+    maxAge: number;
 }

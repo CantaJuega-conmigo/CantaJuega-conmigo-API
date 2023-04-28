@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Child } from './entities/child.entity';
 import User from 'src/user/entities/user.entity';
 import { AuthMiddleware } from 'src/core/middleware/auth-token.middleware';
+import { Entity } from 'typeorm';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Child])],
+  imports: [TypeOrmModule.forFeature([User, Child, Entity])],
   controllers: [ChildController],
   providers: [ChildService]
 })
