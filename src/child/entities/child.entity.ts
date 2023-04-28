@@ -1,6 +1,8 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../../user/entities/user.entity";
 import { Gender } from "src/core/constants";
+import { Stage } from "src/stage/entities/stage.entity";
+
 
 @Entity({ name: 'child'})
 export class Child {
@@ -34,4 +36,7 @@ export class Child {
 
     @OneToOne(() => User, user => user.child)
     user: User;
+
+    @ManyToOne(() => Stage, stage => stage.child)
+    stage: Stage;
 }

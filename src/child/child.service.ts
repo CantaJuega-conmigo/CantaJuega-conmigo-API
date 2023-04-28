@@ -5,6 +5,7 @@ import { Child } from './entities/child.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import User from 'src/user/entities/user.entity';
+import { Stage } from 'src/stage/entities/stage.entity';
 
 @Injectable()
 export class ChildService {
@@ -13,24 +14,38 @@ export class ChildService {
     private readonly childRepository: Repository<Child>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Stage)
+    private readonly stageRepository: Repository<Stage>,
   ) {}
   async create(createChildDto: CreateChildDto) {
-    
     const user = await this.userRepository.findOne({
       where: { id: createChildDto.user.id },
       relations: ['child'],
     });
-  
+
     if (user.child) throw new BadRequestException('User already has a child');
 
     const child = await this.childRepository.create(createChildDto);
     child.user = user;
+    await child.calculateAgeInMonths();
+    const stage = await this.stageRepository
+      .createQueryBuilder('stage')
+      .where(':age >= stage.minAge AND :age < stage.maxAge', {
+        age: child.age,
+      })
+      .orderBy('stage.maxAge', 'DESC')
+      .getOne();
+    child.stage =
+      stage ||
+      (await this.stageRepository.findOne({ order: { maxAge: 'DESC' } }));
 
     return this.childRepository.save(child);
   }
 
-  findAll() {
-    return `This action returns all child`;
+  async findAll() {
+    return this.childRepository.find({
+      relations: ['user', 'stage'],
+    });
   }
 
   findOne(id: number) {

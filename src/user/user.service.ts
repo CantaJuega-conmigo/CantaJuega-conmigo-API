@@ -89,7 +89,7 @@ export class UserService {
   }
 
   async findAll(): Promise<User[]> {
-    return await this.userRepository.createQueryBuilder('user').getMany();
+    return await this.userRepository.find({ relations: ['child'] });
   }
 
   async findByEmail(email: string): Promise<User | undefined> {
