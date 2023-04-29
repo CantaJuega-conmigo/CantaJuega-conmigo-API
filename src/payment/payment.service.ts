@@ -8,6 +8,8 @@ import { Repository } from 'typeorm';
 import { HttpService } from '@nestjs/axios';
 import { catchError, map } from 'rxjs/operators';
 import { AxiosError } from 'axios';
+import { Payment } from './entities/payment.entity';
+import { PAYMAENT_STATUS } from 'src/core/constants/constants';
 
 interface RecurrenteUserCreate {
   id: string;
@@ -25,6 +27,8 @@ export class PaymentService {
     private readonly membershipRepository: Repository<Membership>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Payment)
+    private readonly paymentRepository: Repository<Payment>,
     private readonly httpService: HttpService,
   ) {}
 
@@ -85,6 +89,13 @@ export class PaymentService {
         }),
       )
       .toPromise();
+
+      const payment = await this.paymentRepository.save({
+        user: userDB,
+        membership: membershipDB,
+        checkoutId: checkout.id,
+        status: PAYMAENT_STATUS.pending,
+        });
 
     return res.redirect(checkout.checkout_url);
   }
