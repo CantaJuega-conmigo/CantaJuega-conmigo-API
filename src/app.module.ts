@@ -15,6 +15,8 @@ import { ChildModule } from './child/child.module';
 import { Child } from './child/entities/child.entity';
 import { Stage } from './stage/entities/stage.entity';
 import { StageModule } from './stage/stage.module';
+import { PaymentModule } from './payment/payment.module';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -44,7 +46,9 @@ import { StageModule } from './stage/stage.module';
     EmailModule,
     SeedModule,
     ChildModule,
-    StageModule
+    StageModule,
+    PaymentModule,
+    HttpModule
   ],
   controllers: [AppController],
   providers: [AppService],

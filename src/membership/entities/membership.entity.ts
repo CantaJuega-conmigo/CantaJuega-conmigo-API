@@ -32,6 +32,9 @@ export class Membership {
   @Column({type:"boolean", default:false})
   videos:boolean;
 
+  @Column({type:"text"})
+  recurrenteId:string;
+
   @Column({type:'enum', enum:Status, default:Status.ACTIVE})
   status:Status;
 }

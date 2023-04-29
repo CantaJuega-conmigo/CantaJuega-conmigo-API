@@ -30,6 +30,8 @@ export class User {
   @Column({ type: 'varchar', nullable: true })
   password: string;
  
+  @Column({ type: 'varchar', nullable: true })
+  recurrenteId: string;
 
   @OneToOne(()=> Child , child => child.user, {cascade: true})
   @JoinColumn()
