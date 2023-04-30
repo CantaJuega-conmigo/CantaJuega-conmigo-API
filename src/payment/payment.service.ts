@@ -32,9 +32,6 @@ export class PaymentService {
   ) {}
 
   async subscribe(user: AuthUserDTO, id: string) {
-    console.log(id);
-    console.log(this.RequestHeader);
-    
     const membershipDB = await this.membershipRepository.findOne({
       where: { id },
     });
@@ -59,7 +56,6 @@ export class PaymentService {
         // userDB.recurrenteId = recurrenteUser.id as string;
         await this.userRepository.save(userDB);
       } catch (error) {
-        console.error(error.message);
         throw new Error('Failed to create Recurrente user');
       }
     }
