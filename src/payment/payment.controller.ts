@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe, Post, Req, Res } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { Request, Response } from 'express';
 import { GetUser } from 'src/core/auth/decorators';
@@ -11,11 +11,9 @@ export class PaymentController {
   @Get('subscribe/:id')
   async subscribe(
     @GetUser() user: AuthUserDTO,
-    @Param('id') id: string,
-    @Res() res: Response
+    @Param('id', ParseUUIDPipe) id: string,
   ) {
-     return this.paymentService.subscribe(user, id, res);
-
+     return await this.paymentService.subscribe(user, id);
   }
 
   @Get('cancel')

@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Response } from 'express';
 import { AuthUserDTO } from 'src/core/auth/dto/auth-user.dto';
 import { Membership } from 'src/membership/entities/membership.entity';
 import User from 'src/user/entities/user.entity';
@@ -32,7 +31,10 @@ export class PaymentService {
     private readonly httpService: HttpService,
   ) {}
 
-  async subscribe(user: AuthUserDTO, id: string, res: Response) {
+  async subscribe(user: AuthUserDTO, id: string) {
+    console.log(id);
+    console.log(this.RequestHeader);
+    
     const membershipDB = await this.membershipRepository.findOne({
       where: { id },
     });
@@ -43,7 +45,7 @@ export class PaymentService {
 
     if (!userDB.recurrenteId) {
       try {
-        const recurrenteUser: RecurrenteUserCreate = await this.httpService
+        const recurrenteUser = await this.httpService
           .post(
             'https://app.recurrente.com/api/users',
             {
@@ -52,16 +54,9 @@ export class PaymentService {
             },
             this.RequestHeader,
           )
-          .pipe(
-            map((response) => response.data),
-            catchError((error: AxiosError) => {
-              console.error(error.message);
-              throw new Error('Failed to create Recurrente user');
-            }),
-          )
-          .toPromise();
+        
 
-        userDB.recurrenteId = recurrenteUser.id;
+        // userDB.recurrenteId = recurrenteUser.id as string;
         await this.userRepository.save(userDB);
       } catch (error) {
         console.error(error.message);
@@ -90,14 +85,14 @@ export class PaymentService {
       )
       .toPromise();
 
-      const payment = await this.paymentRepository.save({
-        user: userDB,
-        membership: membershipDB,
-        checkoutId: checkout.id,
-        status: PAYMAENT_STATUS.pending,
-        });
+      // const payment = await this.paymentRepository.save({
+      //   user: userDB,
+      //   membership: membershipDB,
+      //   checkoutId: checkout.id,
+      //   status: PAYMAENT_STATUS.pending,
+      //   });
 
-    return res.redirect(checkout.checkout_url);
+    return checkout.checkout_url;
   }
 
   async cancel() {
@@ -108,7 +103,7 @@ export class PaymentService {
     headers: {
       'Content-Type': 'application/json',
       'X-PUBLIC-KEY': process.env.RECURRENTE_PUBLIC_KEY,
-      'X-SECRET-KEY': process.env.RECURRENTE_SECRET_KEY,
+      'X-SECRET-KEY': process.env.RECURRENTE_PRIVATE_KEY,
     },
   };
 }
