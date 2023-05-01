@@ -1,7 +1,7 @@
 import { PAYMAENT_STATUS } from 'src/core/constants/constants';
 import { Membership } from 'src/membership/entities/membership.entity';
 import User from 'src/user/entities/user.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 @Entity({ name: 'payment' })
 export class Payment {
@@ -30,8 +30,7 @@ export class Payment {
   @ManyToOne(() => User, (user) => user.payment)
   user: User;
 
-  @OneToOne(() => Membership , membership => membership.payment)
-  @JoinColumn()
+  @ManyToOne(() => Membership , membership => membership.payment)
   membership: Membership;
   
 }

@@ -3,6 +3,7 @@ import {
   Column,
   PrimaryGeneratedColumn,
   OneToOne,
+  OneToMany,
 } from 'typeorm';
 import { Status } from 'src/core/constants/constants';
 import { Payment } from 'src/payment/entities/payment.entity';
@@ -40,6 +41,6 @@ export class Membership {
   @Column({type:'enum', enum:Status, default:Status.ACTIVE})
   status:Status;
 
-  @OneToOne(()=> Payment , payment => payment.membership)
-  payment: Payment;
+  @OneToMany(()=> Payment , payment => payment.membership)
+  payment: Payment[];
 }

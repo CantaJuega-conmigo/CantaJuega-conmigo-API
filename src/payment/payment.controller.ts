@@ -20,8 +20,18 @@ export class PaymentController {
   async cancel(
     @Req() req: Request
   ) {
-    console.log(req);
+    console.log(req.headers.location);
+    console.log(req.headers.origin);
+    console.log(req.authInfo);
+    console.log(req.originalUrl);
     
-    return req
+    return await this.paymentService.cancel();
+    
+  }
+
+  @Get()
+  async getPayments()
+  {
+    return await this.paymentService.getPayments();
   }
 }

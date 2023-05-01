@@ -87,22 +87,25 @@ export class PaymentService {
         }),
       )
       .toPromise();
+      const payment = this.paymentRepository.create({
+          user: userDB,
+          membership,
+          status: PAYMAENT_STATUS.pending,
+          recurrenteId: checkout.id,
+          checkout_url: checkout.checkout_url,
+          dateOfCreation: new Date(),
+      });
+      await this.paymentRepository.save(payment);
 
-      await this.paymentRepository.save({
-        user: userDB,
-        membership,
-        checkoutId: checkout.id,
-        status: PAYMAENT_STATUS.pending,
-        recurrenteId: checkout.id,
-        checkout_url: checkout.checkout_url,
-        dateOfCreation: new Date(),
-        });
-
-    return checkout.checkout_url;
+    return `${checkout.checkout_url}?api_key=${payment.id}`;
   }
 
   async cancel() {
     return 'Payment cancelled!';
+  }
+
+  async getPayments() {
+    return this.paymentRepository.find();
   }
 
   private readonly RequestHeader = {
