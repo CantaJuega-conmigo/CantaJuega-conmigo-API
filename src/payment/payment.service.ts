@@ -93,6 +93,7 @@ export class PaymentService {
         membership,
         checkoutId: checkout.id,
         status: PAYMAENT_STATUS.pending,
+        recurrenteId: checkout.id,
         checkout_url: checkout.checkout_url,
         dateOfCreation: new Date(),
         });

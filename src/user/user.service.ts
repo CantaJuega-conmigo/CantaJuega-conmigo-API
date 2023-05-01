@@ -81,6 +81,7 @@ export class UserService {
       user = await this.userRepository.create(body);
       await this.userRepository.save(user);
     }
+    
     const token = await this.generateToken(user);
     return {
       user,
@@ -97,13 +98,25 @@ export class UserService {
   }
 
   async findOne(id: string) {
-    const user = await this.userRepository
-      .createQueryBuilder('user')
-      .where('user.id = :id', { id })
-      .getOne();
+   return await this.userRepository.findOne({
+      where: { id },
+      relations: ['child', 'payment'],
+   });
+  }
+
+  async authUser(id: string) {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['child', 'payment'],
+    });
     if (!user) throw new NotFoundException(`User with ID ${id} not found`);
 
-    return user;
+    const token = await this.generateToken(user);
+
+    return {
+      user,
+      token,
+    };
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
