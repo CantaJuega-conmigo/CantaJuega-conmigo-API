@@ -1,10 +1,12 @@
 import { Child } from 'src/child/entities/child.entity';
+import { Payment } from 'src/payment/entities/payment.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   OneToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity({ name: 'user' })
@@ -36,6 +38,9 @@ export class User {
   @OneToOne(()=> Child , child => child.user, {cascade: true})
   @JoinColumn()
   child: Child;
+
+  @OneToMany(() => Payment, (payment) => payment.user)
+  payment: Payment[];
   
 }
 

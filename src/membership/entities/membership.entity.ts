@@ -2,8 +2,10 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
+  OneToOne,
 } from 'typeorm';
 import { Status } from 'src/core/constants/constants';
+import { Payment } from 'src/payment/entities/payment.entity';
 
 @Entity({ name: 'membership' })
 export class Membership {
@@ -37,4 +39,7 @@ export class Membership {
 
   @Column({type:'enum', enum:Status, default:Status.ACTIVE})
   status:Status;
+
+  @OneToOne(()=> Payment , payment => payment.membership)
+  payment: Payment;
 }

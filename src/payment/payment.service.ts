@@ -32,17 +32,17 @@ export class PaymentService {
   ) {}
 
   async subscribe(user: AuthUserDTO, id: string) {
-    const membershipDB = await this.membershipRepository.findOne({
+    const membership = await this.membershipRepository.findOne({
       where: { id },
     });
     const userDB = await this.userRepository.findOne({
       where: { id: user.id },
     });
-    if (!userDB || !membershipDB) throw new NotFoundException('User not found');
+    if (!userDB || !membership) throw new NotFoundException('User not found');
 
     if (!userDB.recurrenteId) {
       try {
-        const recurrenteUser = await this.httpService
+        const recurrenteUser : RecurrenteUserCreate = await this.httpService
           .post(
             'https://app.recurrente.com/api/users',
             {
@@ -50,10 +50,17 @@ export class PaymentService {
               full_name: `${userDB.firstName} ${userDB.lastName}`,
             },
             this.RequestHeader,
+          ) .pipe(
+            map((response) => response.data),
+            catchError((error: AxiosError) => {
+              console.error(error.message);
+              throw new Error('Failed to create Recurrente user');
+            }),
           )
+          .toPromise();
         
 
-        // userDB.recurrenteId = recurrenteUser.id as string;
+        userDB.recurrenteId = recurrenteUser.id as string;
         await this.userRepository.save(userDB);
       } catch (error) {
         throw new Error('Failed to create Recurrente user');
@@ -62,7 +69,7 @@ export class PaymentService {
 
     const requestBody = {
       items: [
-        { price_id: membershipDB.recurrenteId, user_id: userDB.recurrenteId },
+        { price_id: membership.recurrenteId, user_id: userDB.recurrenteId },
       ],
     };
 
@@ -81,12 +88,14 @@ export class PaymentService {
       )
       .toPromise();
 
-      // const payment = await this.paymentRepository.save({
-      //   user: userDB,
-      //   membership: membershipDB,
-      //   checkoutId: checkout.id,
-      //   status: PAYMAENT_STATUS.pending,
-      //   });
+      await this.paymentRepository.save({
+        user: userDB,
+        membership,
+        checkoutId: checkout.id,
+        status: PAYMAENT_STATUS.pending,
+        checkout_url: checkout.checkout_url,
+        dateOfCreation: new Date(),
+        });
 
     return checkout.checkout_url;
   }
