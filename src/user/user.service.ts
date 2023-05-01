@@ -10,17 +10,20 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import User from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
-import { SALT, EXPIRED_TOKEN } from '../core/constants';
+import { SALT, EXPIRED_TOKEN, EXPIRED_TOKEN_CONFIRM_EMAIL } from '../core/constants';
 import { plainToClass } from 'class-transformer';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { LoginUserDto } from './dto/login-user.dto';
+import { EmailService } from '../utils/email/email.service';
+import { confirmEmailTemplate } from 'src/utils/email/utils/template';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     private readonly configService: ConfigService,
+    readonly emailService: EmailService,
   ) {}
 
   async create(
@@ -39,6 +42,19 @@ export class UserService {
     });
     const user = await this.userRepository.save(createdUser);
     const token = await this.generateToken(user);
+    const confirmEmailToken = await this.generateConfirmEmailToken(user);
+
+    this.emailService.sendEmail(
+      {
+        to: user.email,
+        subject: 'Bienvenido a Canta Juega Conmigo',
+        html: confirmEmailTemplate({
+          firstName: user.firstName,
+          lastName: user.lastName,
+          token: confirmEmailToken,
+        }),
+      },
+    );
 
     return {
       user,
@@ -73,7 +89,7 @@ export class UserService {
   }
 
   async findAll(): Promise<User[]> {
-    return await this.userRepository.createQueryBuilder('user').getMany();
+    return await this.userRepository.find({ relations: ['child'] });
   }
 
   async findByEmail(email: string): Promise<User | undefined> {
@@ -106,10 +122,39 @@ export class UserService {
     }
     return this.userRepository.delete(id);
   }
+  async confirmEmail(id: string) {
+    const user = await this.findOne(id);
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+    user.emailVerified = true;
+    return this.userRepository.save(user);
+  }
+
+  async generateConfirmEmailToken(user: User) {
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      },
+      this.configService.get<string>('JWT_SECRET_CONFIRM_EMAIL'),
+      { expiresIn: EXPIRED_TOKEN_CONFIRM_EMAIL },
+    );
+    return token;
+  }
+
+            
 
    async generateToken(user: User) {
     const token = jwt.sign(
-      user,
+      {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      },
       this.configService.get<string>('JWT_SECRET'),
       { expiresIn: EXPIRED_TOKEN },
     );
