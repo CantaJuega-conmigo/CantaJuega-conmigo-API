@@ -1,7 +1,7 @@
 import { User } from "./types";
 import { v4 as uuidv4 } from 'uuid';
 import * as bcrypt from 'bcrypt';
-import { SALT } from 'src/Core/Constants';
+import { SALT } from 'src/core/constants';
 
 const userId = [
     uuidv4(),
