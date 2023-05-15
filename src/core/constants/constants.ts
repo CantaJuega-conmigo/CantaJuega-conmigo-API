@@ -36,3 +36,11 @@ export enum Gender {
   NonBinary = 'NonBinary',
   other = 'other',
 }
+
+export enum PAYMAENT_STATUS { 
+  pending = 'pending',
+  paid = 'paid',
+  canceled = 'canceled',
+  failed = 'failed',
+  expired = 'expired',
+}

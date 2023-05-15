@@ -18,6 +18,7 @@ const membershipSeed : Membership[] = [
         videos: true,
         music: true,
         therapeuticTools: true,
+        recurrenteId:'prod_wmqaobmf'
     },
     {
         id: membreshipId[1],
@@ -28,6 +29,7 @@ const membershipSeed : Membership[] = [
         videos: true,
         music: true,
         therapeuticTools: true,
+        recurrenteId:'prod_wmqaobmf'
     },
     {
         id: membreshipId[2],
@@ -38,6 +40,8 @@ const membershipSeed : Membership[] = [
         videos: true,
         music: true,
         therapeuticTools: true,
+        recurrenteId:'prod_wmqaobmf'
+
     },
     {
         id: membreshipId[3],
@@ -48,6 +52,7 @@ const membershipSeed : Membership[] = [
         videos: false,
         therapeuticTools: false,
         music: true,
+        recurrenteId:'prod_wmqaobmf'
     }
 ]
 

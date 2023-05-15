@@ -15,6 +15,9 @@ import { ChildModule } from './child/child.module';
 import { Child } from './child/entities/child.entity';
 import { Stage } from './stage/entities/stage.entity';
 import { StageModule } from './stage/stage.module';
+import { PaymentModule } from './payment/payment.module';
+import { HttpModule } from '@nestjs/axios';
+import { Payment } from './payment/entities/payment.entity';
 
 @Module({
   imports: [
@@ -27,13 +30,13 @@ import { StageModule } from './stage/stage.module';
         username: configService.get<string>('PGUSERNAME'),
         password: configService.get<string>('PGPASSWORD'),
         database: configService.get<string>('PGDATABASE'),
-        entities:[User, Membership, Child, Stage],
+        entities:[User, Membership, Child, Stage, Payment],
         synchronize:true,
         // dropSchema: true,
       }),
       inject: [ConfigService],
     }),
-    TypeOrmModule.forFeature([User, Membership, Child, Stage]),
+    TypeOrmModule.forFeature([User, Membership, Child, Stage, Payment]),
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -44,7 +47,9 @@ import { StageModule } from './stage/stage.module';
     EmailModule,
     SeedModule,
     ChildModule,
-    StageModule
+    StageModule,
+    PaymentModule,
+    HttpModule
   ],
   controllers: [AppController],
   providers: [AppService],
