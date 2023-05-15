@@ -2,8 +2,11 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
+  OneToOne,
+  OneToMany,
 } from 'typeorm';
 import { Status } from 'src/core/constants/constants';
+import { Payment } from 'src/payment/entities/payment.entity';
 
 @Entity({ name: 'membership' })
 export class Membership {
@@ -32,6 +35,12 @@ export class Membership {
   @Column({type:"boolean", default:false})
   videos:boolean;
 
+  @Column({type:"text"})
+  recurrenteId:string;
+
   @Column({type:'enum', enum:Status, default:Status.ACTIVE})
   status:Status;
+
+  @OneToMany(()=> Payment , payment => payment.membership)
+  payment: Payment[];
 }

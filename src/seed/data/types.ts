@@ -2,6 +2,7 @@ import CreateChildDto from "src/child/dto/create-child.dto";
 
 export interface Membership {
     id: string;
+    recurrenteId: string;
     name: string;
     description: string;
     price: number;
