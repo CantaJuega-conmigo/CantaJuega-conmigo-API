@@ -38,7 +38,8 @@ export class MembershipService {
     return this.membershipRepository.update(id,updateMembershipDto);
   }
 
-  async remove(id: number): Promise<DeleteResult> {
+  // async remove(id: number): Promise<DeleteResult> {
+  async remove(id: string): Promise<DeleteResult> {
     return this.membershipRepository 
       .createQueryBuilder('membership')
       .delete()

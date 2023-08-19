@@ -48,7 +48,8 @@ export class MembershipController {
 
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<string> {
-    const membershipDeleted = await this.membershipService.remove(+id);
+    // const membershipDeleted = await this.membershipService.remove(+id);
+    const membershipDeleted = await this.membershipService.remove(id);
     if(membershipDeleted.affected === 0)
       throw new NotFoundException('Membership not found');
     return 'Membership successfully deleted';

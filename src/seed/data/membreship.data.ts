@@ -18,7 +18,8 @@ const membershipSeed : Membership[] = [
         videos: true,
         music: true,
         therapeuticTools: true,
-        recurrenteId:'prod_wmqaobmf'
+        recurrenteId:'prod_6sl3mnqq'
+        // recurrenteId:'prod_wmqaobmf'
     },
     {
         id: membreshipId[1],
@@ -29,7 +30,8 @@ const membershipSeed : Membership[] = [
         videos: true,
         music: true,
         therapeuticTools: true,
-        recurrenteId:'prod_wmqaobmf'
+        recurrenteId:'prod_6sl3mnqq'
+        // recurrenteId:'prod_wmqaobmf'
     },
     {
         id: membreshipId[2],
@@ -40,7 +42,8 @@ const membershipSeed : Membership[] = [
         videos: true,
         music: true,
         therapeuticTools: true,
-        recurrenteId:'prod_wmqaobmf'
+        recurrenteId:'prod_6sl3mnqq'
+        // recurrenteId:'prod_wmqaobmf'
 
     },
     {
@@ -52,7 +55,8 @@ const membershipSeed : Membership[] = [
         videos: false,
         therapeuticTools: false,
         music: true,
-        recurrenteId:'prod_wmqaobmf'
+        recurrenteId:'prod_6sl3mnqq'
+        // recurrenteId:'prod_wmqaobmf'
     }
 ]
 
